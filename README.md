@@ -21,7 +21,7 @@
 6. The fetch routes will continue to show "oldest records first" (sorting by id), so jump to the last page imported when runing subsequent times.
 
 ## Edge Cases
-1. A bill with a vendorId from a legacy system where the associated vendor was unable to be imported. I skipped the bill and it's line items and output the billId to the console so that it could be delt with separately instead of breaking the ingestion altogether.
+1. A bill with a `vendorId` from a legacy system where the associated vendor was unable to be imported. I skipped the bill and it's line items and output the `billId` to the console so that it could be dealt with separately instead of breaking the ingestion altogether.
 2. Save most recent page ingested for each type to cut down on API calls when running in the future
 3. Used upsert so that re-running the ingestion from the top wouldn't cause issues with records that have already been imported.
 
