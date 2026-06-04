@@ -1,0 +1,119 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model LedgerAccounts {
+  id                Int @id @default(autoincrement())
+  external_id       String @unique
+  name              String
+  number            String
+  type              LedgerType
+  subtype           String
+  natural_balance   LedgerBalance
+  description       String?
+  inactive          Boolean @default(false)
+
+  vendors           Vendors[]
+  bills             Bills[]
+  bill_line_items   BillLineItems[]
+  payments          Payments[]
+}
+
+enum LedgerType {
+  Asset
+  Liability
+  Equity
+  Revenue
+  Expense
+}
+
+enum LedgerBalance {
+  Debit
+  Credit
+}
+
+model Vendors {
+  id                    Int @id @default(autoincrement())
+  external_id           String @unique
+  name                  String
+  email                 String?
+  ein                   String?
+  is_1099               Boolean @default(false)
+  inactive              Boolean @default(false)
+  address_line_1        String?
+  address_line_2        String?
+  address_city          String?
+  address_state         String?
+  address_zip           String?
+  address_country       String?
+  contact_name          String?
+  contact_phone         String?
+  contact_email         String?
+
+
+  expense_account       LedgerAccounts? @relation(fields: [expense_account_id], references: [id])
+  expense_account_id    Int?
+
+  bills                 Bills[]
+}
+
+model Bills {
+  id                    Int @id @default(autoincrement())
+  external_id           String @unique
+  invoice_date          DateTime
+  posting_date          DateTime
+  due_date              DateTime?
+  description           String?
+  currency              String
+  inactive              Boolean @default(false)
+
+  vendor                Vendors @relation(fields: [vendor_id], references: [id])
+  vendor_id             Int
+  ap_account            LedgerAccounts @relation(fields: [ap_account_id], references: [id])
+  ap_account_id         Int
+
+  bill_line_items       BillLineItems[]
+  payments              Payments[]
+}
+
+model BillLineItems {
+  id                    Int @id @default(autoincrement())
+  external_id           String @unique
+  line_type             String @default("expense")
+  description           String?
+  amount                Decimal
+  quantity              Decimal
+  tax_amount            Decimal?
+
+  bill                  Bills @relation(fields: [bill_id], references: [id])
+  bill_id               Int
+  ledger_account        LedgerAccounts @relation(fields: [ledger_account_id], references: [id])
+  ledger_account_id     Int
+}
+
+model Payments {
+  id                    Int @id @default(autoincrement())
+  external_id           String @unique
+  type                  String @default("manual")
+  payment_date          DateTime
+  amount                Decimal
+  check_number          String?
+  memo                  String?
+
+  bill                  Bills @relation(fields: [bill_id], references: [id])
+  bill_id               Int
+  ledger_account        LedgerAccounts @relation(fields: [ledger_account_id], references: [id])
+  ledger_account_id     Int
+
+  @@unique([external_id, bill_id])
+}

@@ -1,0 +1,40 @@
+{
+  "name": "softledger-takehome",
+  "version": "1.0.0",
+  "description": "SoftLedger take-home project",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:push": "prisma db push",
+    "db:studio": "prisma studio",
+    "postinstall": "prisma generate"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tomjcrawford/softledger-takehome.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "bugs": {
+    "url": "https://github.com/tomjcrawford/softledger-takehome/issues"
+  },
+  "homepage": "https://github.com/tomjcrawford/softledger-takehome#readme",
+  "dependencies": {
+    "@prisma/adapter-better-sqlite3": "^7.8.0",
+    "@prisma/client": "^7.8.0",
+    "better-sqlite3": "^12.10.0",
+    "dotenv": "^17.4.2"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "prisma": "^7.8.0",
+    "tsx": "^4.22.4"
+  }
+}
